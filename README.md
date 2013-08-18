@@ -13,3 +13,12 @@
 
     sandbox.runInSandbox(badFun, context); // => Error: 'http' is not whitelisted
 ````
+
+## Running the Tests
+
+````Shell
+    nodeunit test
+````
+
+This requires nodeunit to be installed as a global package (`npm install
+-g nodeunit`).
