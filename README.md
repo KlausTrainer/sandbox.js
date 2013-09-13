@@ -4,8 +4,8 @@
 
 ````javascript
     var sandbox = require("./sandbox"),
-      whiteList = ["console"],
-      context = {require: sandbox.secureRequire(require, whiteList)},
+      whitelist = ["console"],
+      context = {require: sandbox.secureRequire(require, whitelist)},
       goodFun = function() { require("console").log("Hello World!"); },
       badFun = function() { require("http"); };
 
