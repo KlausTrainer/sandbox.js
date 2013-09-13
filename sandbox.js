@@ -6,7 +6,7 @@ exports.runInSandbox = function(src, ctx) {
   return script.runInContext(sandbox);
 };
 
-exports.secureRequire = function(insecureRequire, whiteList) {
+exports.secureRequire = function(insecureRequire, whitelist) {
   var yCombinator = function(f) {
     return (function(x) {
       return f(function(y) { return (x(x))(y);});
@@ -18,7 +18,7 @@ exports.secureRequire = function(insecureRequire, whiteList) {
   return yCombinator(
     function(secureRequire) {
       return function(moduleName) {
-        if (whiteList.indexOf(moduleName) == -1) {
+        if (whitelist.indexOf(moduleName) == -1) {
           throw new Error("'" + moduleName + "' is not whitelisted");
         } else {
           var requiredModule = insecureRequire(moduleName);

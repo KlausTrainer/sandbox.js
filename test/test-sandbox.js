@@ -1,7 +1,7 @@
 exports.testSecureRequire = function(test) {
   var sandbox = require("../sandbox"),
-    whiteList = ["console"],
-    context = {require: sandbox.secureRequire(require, whiteList)};
+    whitelist = ["console"],
+    context = {require: sandbox.secureRequire(require, whitelist)};
 
   test.doesNotThrow(function() {
     sandbox.runInSandbox(function() { require("console") }, context);
