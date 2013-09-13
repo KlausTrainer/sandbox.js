@@ -8,10 +8,10 @@ exports.runInSandbox = function(src, ctx) {
 
 exports.secureRequire = function(insecureRequire, whiteList) {
   var yCombinator = function(f) {
-    return (function (x) {
-      return f(function (y) { return (x(x))(y);});
-    })(function (x) {
-      return f(function (y) { return (x(x))(y);});
+    return (function(x) {
+      return f(function(y) { return (x(x))(y);});
+    })(function(x) {
+      return f(function(y) { return (x(x))(y);});
     });
   };
 
