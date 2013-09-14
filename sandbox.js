@@ -17,13 +17,18 @@ exports.secureRequire = function(insecureRequire, whitelist) {
 
   return yCombinator(
     function(secureRequire) {
+      var module = insecureRequire("module");
+      module.prototype = {
+        require: secureRequire,
+        load: module.prototype.load,
+        _compile: module.prototype._compile
+      };
+
       return function(moduleName) {
         if (whitelist.indexOf(moduleName) == -1) {
           throw new Error("'" + moduleName + "' is not whitelisted");
         } else {
-          var requiredModule = insecureRequire(moduleName);
-          requiredModule.require = secureRequire;
-          return requiredModule;
+          return insecureRequire(moduleName);
         }
       };
     }
