@@ -1,5 +1,15 @@
 # sandbox.js
 
+This is a module that allows for executing functions within a sandbox in
+Node.js.  It provides a `runInSandbox` function that takes a function as
+argument, as well as an optional context and an optional module whitelist.  If
+the context contains a `require` property and a whitelist is specified, the
+`require` property will be replaced by a "secure" require function before the
+specified function is executed in the sandbox.  The "secure" require function
+is a wrapper around the default require function provided by Node.js, and does
+nothing more than either loading a module or throwing an error, based on the
+whitelist.
+
 ## Usage
 
 ````javascript
