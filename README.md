@@ -12,6 +12,7 @@
 
     sandbox.runInSandbox(theAnswerFun); // => 42
 
+    sandbox.runInSandbox(consoleFun); // => ReferenceError: require is not defined
     sandbox.runInSandbox(consoleFun, context); // => Hello World!
     sandbox.runInSandbox(consoleFun, context, whitelist); // => Hello World!
 
