@@ -1,36 +1,38 @@
-exports.runInSandbox = function(src, ctx) {
+exports.runInSandbox = function(src, ctx, whitelist) {
   var vm = require('vm'),
-    sandbox = Object.freeze(vm.createContext(ctx || {})),
-    script = vm.createScript('(function() {"use strict"; return ('
-                             + src + ')()}())');
-  return script.runInContext(sandbox);
-};
+    sandbox;
 
-exports.secureRequire = function(insecureRequire, whitelist) {
-  var yCombinator = function(f) {
-    return (function(x) {
-      return f(function(y) { return (x(x))(y);});
-    })(function(x) {
-      return f(function(y) { return (x(x))(y);});
-    });
-  };
+  if (ctx && ctx.require && whitelist) {
+    var insecureRequire = ctx.require,
+      module = require("module"),
+      oldModulePrototype = module.prototype;
 
-  return yCombinator(
-    function(secureRequire) {
-      var module = insecureRequire("module");
-      module.prototype = {
-        require: secureRequire,
-        load: module.prototype.load,
-        _compile: module.prototype._compile
-      };
+    var secureRequire = function(moduleName) {
+      if (whitelist.indexOf(moduleName) == -1) {
+        module.prototype = oldModulePrototype;
+        throw new Error("'" + moduleName + "' is not whitelisted");
+      } else {
+        var requiredModule = insecureRequire(moduleName);
+        module.prototype = oldModulePrototype;
+        return requiredModule;
+      }
+    };
 
-      return function(moduleName) {
-        if (whitelist.indexOf(moduleName) == -1) {
-          throw new Error("'" + moduleName + "' is not whitelisted");
-        } else {
-          return insecureRequire(moduleName);
-        }
-      };
-    }
-  );
+    module.prototype = {
+      require: secureRequire,
+      load: module.prototype.load,
+      _compile: module.prototype._compile
+    };
+
+    module._cache = {};
+
+    ctx.require = secureRequire;
+    sandbox = Object.freeze(vm.createContext(ctx));
+    ctx.require = insecureRequire;
+  } else {
+    sandbox = Object.freeze(vm.createContext(ctx || {}));
+  }
+
+  return vm.createScript('(function() {"use strict"; return ('
+                         + src + ')()}())').runInContext(sandbox);
 };

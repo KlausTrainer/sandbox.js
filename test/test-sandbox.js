@@ -6,15 +6,31 @@ exports.testSecureRequire = function(test) {
       "a",
       "b"
     ],
-    context = {require: sandbox.secureRequire(require, whitelist)};
+    context = {require: require};
+
+  var aBarInASandbox = function() {
+    sandbox.runInSandbox(
+      function() { require("a").bar(); },
+      context,
+      whitelist
+    );
+  };
 
   test.doesNotThrow(function() {
-    sandbox.runInSandbox(function() { require("console"); }, context);
+    sandbox.runInSandbox(
+      function() { require("console"); },
+      context,
+      whitelist
+    );
   });
 
   test.throws(
     function() {
-      sandbox.runInSandbox(function() { require("http"); }, context);
+      sandbox.runInSandbox(
+        function() { require("http"); },
+        context,
+        whitelist
+      );
     },
     function(err) {
       if (err instanceof Error && err == "Error: 'http' is not whitelisted") {
@@ -28,32 +44,49 @@ exports.testSecureRequire = function(test) {
   test.equal(
     42,
     sandbox.runInSandbox(
-      function() {
-        return require("./node_modules/http").getTheAnswer();
-      },
-      context
+      function() { return require("./node_modules/http").getTheAnswer(); },
+      context,
+      whitelist
     )
   );
 
   test.equal(
     42,
     sandbox.runInSandbox(
-      function() {
-        return require("a").foo();
-      },
-      context
+      function() { return require("a").foo(); },
+      context,
+      whitelist
     )
   );
 
   test.throws(
-    function() {
-      sandbox.runInSandbox(
-        function() {
-          require("a").bar();
-        },
-        context
-      );
-    },
+    aBarInASandbox,
+    function(err) {
+      if (err instanceof Error && err == "Error: 'c' is not whitelisted") {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  );
+
+  whitelist.push("c");
+
+  test.throws(
+    aBarInASandbox,
+    function(err) {
+      if (err instanceof Error && err == "Error: boooooyaaaaah!") {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  );
+
+  whitelist.pop();
+
+  test.throws(
+    aBarInASandbox,
     function(err) {
       if (err instanceof Error && err == "Error: 'c' is not whitelisted") {
         return true;

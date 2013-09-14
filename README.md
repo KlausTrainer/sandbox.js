@@ -5,13 +5,15 @@
 ````javascript
     var sandbox = require("./sandbox"),
       whitelist = ["console"],
-      context = {require: sandbox.secureRequire(require, whitelist)},
-      goodFun = function() { require("console").log("Hello World!"); },
-      badFun = function() { require("http"); };
+      context = {require: require},
+      consoleFun = function() { require("console").log("Hello World!"); },
+      httpFun = function() { return require("http").STATUS_CODES['200']; };
 
-    sandbox.runInSandbox(goodFun, context); // => Hello World!
+    sandbox.runInSandbox(consoleFun, context); // => Hello World!
+    sandbox.runInSandbox(consoleFun, context, whitelist); // => Hello World!
 
-    sandbox.runInSandbox(badFun, context); // => Error: 'http' is not whitelisted
+    sandbox.runInSandbox(httpFun, context); // => 'OK'
+    sandbox.runInSandbox(httpFun, context, whitelist); // => Error: 'http' is not whitelisted
 ````
 
 ## Running the Tests
