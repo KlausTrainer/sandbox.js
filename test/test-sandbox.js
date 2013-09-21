@@ -137,14 +137,13 @@ exports.testSecureRequire = function(test) {
       });
     },
     function(err) {
-      if(err == "ReferenceError: process is not defined") {
+      if (err == "ReferenceError: process is not defined") {
         return true;
       } else {
         return false;
       }
     }
   );
-
 
   test.done();
 };
