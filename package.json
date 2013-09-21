@@ -1,5 +1,5 @@
 {
-  "name": "sandbox",
+  "name": "sandbox.js",
   "version": "1.0.0",
   "description": "Execute code in a sandbox with a require() whitelist",
   "main": "sandbox.js",
