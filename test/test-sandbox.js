@@ -62,8 +62,7 @@ exports.testSecureRequire = function(test) {
     function() {
       sandbox.runInSandbox(
         function() { require("http"); },
-        context,
-        null
+        context
       );
     },
     function(err) {
