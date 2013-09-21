@@ -41,6 +41,39 @@ exports.testSecureRequire = function(test) {
     }
   );
 
+  test.throws(
+    function() {
+      sandbox.runInSandbox(
+        function() { require("http"); },
+        context,
+        []
+      );
+    },
+    function(err) {
+      if (err instanceof Error && err == "Error: 'http' is not whitelisted") {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  );
+
+  test.throws(
+    function() {
+      sandbox.runInSandbox(
+        function() { require("http"); },
+        context
+      );
+    },
+    function(err) {
+      if (err instanceof Error && err == "Error: 'http' is not whitelisted") {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  );
+
   test.equal(
     42,
     sandbox.runInSandbox(
@@ -89,6 +122,21 @@ exports.testSecureRequire = function(test) {
     aBarInASandbox,
     function(err) {
       if (err instanceof Error && err == "Error: 'c' is not whitelisted") {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  );
+
+  test.throws(
+    function() {
+      sandbox.runInSandbox(function() {
+        return process.env; // could be any of http://nodejs.org/api/globals.html
+      });
+    },
+    function(err) {
+      if (err == "ReferenceError: process is not defined") {
         return true;
       } else {
         return false;
