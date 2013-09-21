@@ -1,0 +1,26 @@
+{
+  "name": "sandbox",
+  "version": "1.0.0",
+  "description": "Execute code in a sandbox with a require() whitelist",
+  "main": "sandbox.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "nodeunit test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KlausTrainer/sandbox.js.git"
+  },
+  "keywords": [
+    "sandbox",
+    "vm",
+    "isolation"
+  ],
+  "author": "Klaus Trainer <klaus_trainer@posteo.de>",
+  "license": "Apache 2 License",
+  "bugs": {
+    "url": "https://github.com/KlausTrainer/sandbox.js/issues"
+  }
+}
