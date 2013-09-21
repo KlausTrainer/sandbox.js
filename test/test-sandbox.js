@@ -41,6 +41,40 @@ exports.testSecureRequire = function(test) {
     }
   );
 
+  test.throws(
+    function() {
+      sandbox.runInSandbox(
+        function() { require("http"); },
+        context,
+        []
+      );
+    },
+    function(err) {
+      if (err instanceof Error && err == "Error: 'http' is not whitelisted") {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  );
+
+  test.throws(
+    function() {
+      sandbox.runInSandbox(
+        function() { require("http"); },
+        context,
+        null
+      );
+    },
+    function(err) {
+      if (err instanceof Error && err == "Error: 'http' is not whitelisted") {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  );
+
   test.equal(
     42,
     sandbox.runInSandbox(

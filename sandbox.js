@@ -2,7 +2,8 @@ exports.runInSandbox = function(src, ctx, whitelist) {
   var vm = require('vm'),
     sandbox;
 
-  if (ctx && ctx.require && whitelist) {
+  if (ctx && ctx.require) {
+    whitelist = whitelist || [];
     var insecureRequire = ctx.require,
       module = require("module"),
       oldModulePrototype = module.prototype;

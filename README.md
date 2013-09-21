@@ -8,7 +8,7 @@ the context contains a `require` property and a whitelist is specified, the
 specified function is executed in the sandbox.  The "secure" require function
 is a wrapper around the default require function provided by Node.js, and does
 nothing more than either loading a module or throwing an error, based on the
-whitelist.
+whitelist.  If no whitelist is specified, we default to an empty whitelist.
 
 ## Usage
 
@@ -23,7 +23,7 @@ whitelist.
     sandbox.runInSandbox(theAnswerFun); // => 42
 
     sandbox.runInSandbox(consoleFun); // => ReferenceError: require is not defined
-    sandbox.runInSandbox(consoleFun, context); // => Hello World!
+    sandbox.runInSandbox(consoleFun, context); // => Error: 'console' is not whitelisted
     sandbox.runInSandbox(consoleFun, context, whitelist); // => Hello World!
 
     sandbox.runInSandbox(httpFun, context); // => 'OK'
