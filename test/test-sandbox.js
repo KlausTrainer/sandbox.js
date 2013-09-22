@@ -58,6 +58,14 @@ exports.testSecureRequire = function(test) {
     }
   );
 
+  test.equal(
+    'function',
+    sandbox.runInSandbox(
+      function() { return typeof require; },
+      context
+    )
+  );
+
   test.throws(
     function() {
       sandbox.runInSandbox(
