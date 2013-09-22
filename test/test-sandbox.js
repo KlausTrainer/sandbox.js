@@ -1,4 +1,4 @@
-exports.testSecureRequire = function(test) {
+exports.testRunInSandbox = function(test) {
   var sandbox = require("../sandbox"),
     whitelist = [
       "console",
