@@ -76,6 +76,24 @@ exports.testSecureRequire = function(test) {
 
   test.equal(
     42,
+    sandbox.runInSandbox(function() { return 42; })
+  );
+
+  test.throws(
+    function() {
+      sandbox.runInSandbox(function() { return require("http"); });
+    },
+    function(err) {
+      if (err == "ReferenceError: require is not defined") {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  );
+
+  test.equal(
+    42,
     sandbox.runInSandbox(
       function() { return require("./node_modules/http").getTheAnswer(); },
       context,
