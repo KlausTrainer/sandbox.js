@@ -1,6 +1,6 @@
 {
   "name": "sandbox.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Execute code in a sandbox with a require() whitelist",
   "main": "sandbox.js",
   "directories": {
