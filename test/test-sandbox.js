@@ -170,5 +170,21 @@ exports.testRunInSandbox = function(test) {
     }
   );
 
+  // assert that we are in strict mode
+  test.throws(
+    function() {
+      sandbox.runInSandbox(function() {
+        foo = 42;
+      });
+    },
+    function(err) {
+      if (err == "ReferenceError: foo is not defined") {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  );
+
   test.done();
 };
