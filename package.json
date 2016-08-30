@@ -1,13 +1,13 @@
 {
   "name": "sandbox.js",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Execute code in a sandbox with a require() whitelist",
   "main": "sandbox.js",
   "directories": {
     "test": "test"
   },
   "scripts": {
-    "test": "nodeunit test"
+    "test": "standard && nodeunit test"
   },
   "repository": {
     "type": "git",
@@ -22,5 +22,9 @@
   "license": "Apache 2 License",
   "bugs": {
     "url": "https://github.com/KlausTrainer/sandbox.js/issues"
+  },
+  "devDependencies": {
+    "nodeunit": "^0.9.3",
+    "standard": "^8.0.0"
   }
 }

@@ -1,190 +1,190 @@
-exports.testRunInSandbox = function(test) {
-  var sandbox = require("../sandbox"),
-    whitelist = [
-      "console",
-      "./node_modules/http",
-      "a",
-      "b"
-    ],
-    context = {require: require};
+exports.testRunInSandbox = function (test) {
+  var sandbox = require('../sandbox')
+  var whitelist = [
+    'console',
+    './node_modules/http',
+    'a',
+    'b'
+  ]
+  var context = {require: require}
 
-  var aBarInASandbox = function() {
+  var aBarInASandbox = function () {
     sandbox.runInSandbox(
-      function() { require("a").bar(); },
+      function () { require('a').bar() },
       context,
       whitelist
-    );
-  };
+    )
+  }
 
-  test.doesNotThrow(function() {
+  test.doesNotThrow(function () {
     sandbox.runInSandbox(
-      function() { require("console"); },
+      function () { require('console') },
       context,
       whitelist
-    );
-  });
+    )
+  })
 
   test.throws(
-    function() {
+    function () {
       sandbox.runInSandbox(
-        function() { require("http"); },
+        function () { require('http') },
         context,
         whitelist
-      );
+      )
     },
-    function(err) {
-      if (err instanceof Error && err == "Error: 'http' is not whitelisted") {
-        return true;
+    function (err) {
+      if (err instanceof Error && err.message === "'http' is not whitelisted") {
+        return true
       } else {
-        return false;
+        return false
       }
     }
-  );
+  )
 
   test.throws(
-    function() {
+    function () {
       sandbox.runInSandbox(
-        function() { require("http"); },
+        function () { require('http') },
         context,
         []
-      );
+      )
     },
-    function(err) {
-      if (err instanceof Error && err == "Error: 'http' is not whitelisted") {
-        return true;
+    function (err) {
+      if (err instanceof Error && err.message === "'http' is not whitelisted") {
+        return true
       } else {
-        return false;
+        return false
       }
     }
-  );
+  )
 
   test.equal(
     'function',
     sandbox.runInSandbox(
-      function() { return typeof require; },
+      function () { return typeof require },
       context
     )
-  );
+  )
 
   test.throws(
-    function() {
+    function () {
       sandbox.runInSandbox(
-        function() { require("http"); },
+        function () { require('http') },
         context
-      );
+      )
     },
-    function(err) {
-      if (err instanceof Error && err == "Error: 'http' is not whitelisted") {
-        return true;
+    function (err) {
+      if (err instanceof Error && err.message === "'http' is not whitelisted") {
+        return true
       } else {
-        return false;
+        return false
       }
     }
-  );
+  )
 
   test.equal(
     42,
-    sandbox.runInSandbox(function() { return 42; })
-  );
+    sandbox.runInSandbox(function () { return 42 })
+  )
 
   test.throws(
-    function() {
-      sandbox.runInSandbox(function() { return require("http"); });
+    function () {
+      sandbox.runInSandbox(function () { return require('http') })
     },
-    function(err) {
-      if (err == "ReferenceError: require is not defined") {
-        return true;
+    function (err) {
+      if (err.message === 'require is not defined') {
+        return true
       } else {
-        return false;
+        return false
       }
     }
-  );
-
-  test.equal(
-    42,
-    sandbox.runInSandbox(
-      function() { return require("./node_modules/http").getTheAnswer(); },
-      context,
-      whitelist
-    )
-  );
+  )
 
   test.equal(
     42,
     sandbox.runInSandbox(
-      function() { return require("a").foo(); },
+      function () { return require('./node_modules/http').getTheAnswer() },
       context,
       whitelist
     )
-  );
+  )
+
+  test.equal(
+    42,
+    sandbox.runInSandbox(
+      function () { return require('a').foo() },
+      context,
+      whitelist
+    )
+  )
 
   test.throws(
     aBarInASandbox,
-    function(err) {
-      if (err instanceof Error && err == "Error: 'c' is not whitelisted") {
-        return true;
+    function (err) {
+      if (err instanceof Error && err.message === "'c' is not whitelisted") {
+        return true
       } else {
-        return false;
+        return false
       }
     }
-  );
+  )
 
-  whitelist.push("c");
+  whitelist.push('c')
 
   test.throws(
     aBarInASandbox,
-    function(err) {
-      if (err instanceof Error && err == "Error: boooooyaaaaah!") {
-        return true;
+    function (err) {
+      if (err instanceof Error && err.message === 'boooooyaaaaah!') {
+        return true
       } else {
-        return false;
+        return false
       }
     }
-  );
+  )
 
-  whitelist.pop();
+  whitelist.pop()
 
   test.throws(
     aBarInASandbox,
-    function(err) {
-      if (err instanceof Error && err == "Error: 'c' is not whitelisted") {
-        return true;
+    function (err) {
+      if (err instanceof Error && err.message === "'c' is not whitelisted") {
+        return true
       } else {
-        return false;
+        return false
       }
     }
-  );
+  )
 
   test.throws(
-    function() {
-      sandbox.runInSandbox(function() {
-        return process.env; // could be any of http://nodejs.org/api/globals.html
-      });
+    function () {
+      sandbox.runInSandbox(function () {
+        return process.env // could be any of http://nodejs.org/api/globals.html
+      })
     },
-    function(err) {
-      if (err == "ReferenceError: process is not defined") {
-        return true;
+    function (err) {
+      if (err.message === 'process is not defined') {
+        return true
       } else {
-        return false;
+        return false
       }
     }
-  );
+  )
 
   // assert that we are in strict mode
   test.throws(
-    function() {
-      sandbox.runInSandbox(function() {
-        foo = 42;
-      });
+    function () {
+      sandbox.runInSandbox(function () {
+        foo = 42 // eslint-disable-line
+      })
     },
-    function(err) {
-      if (err == "ReferenceError: foo is not defined") {
-        return true;
+    function (err) {
+      if (err.message === 'foo is not defined') {
+        return true
       } else {
-        return false;
+        return false
       }
     }
-  );
+  )
 
-  test.done();
-};
+  test.done()
+}

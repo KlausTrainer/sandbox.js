@@ -1,5 +1,9 @@
 # sandbox.js
 
+[![Build Status](https://travis-ci.org/KlausTrainer/sandbox.js.svg?branch=main)](https://travis-ci.org/KlausTrainer/sandbox.js)
+
+[![JavaScript Style Guide](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+
 This is a module that allows for executing functions within a sandbox in
 Node.js.  It provides a `runInSandbox` function that takes a function as
 argument, as well as an optional context and an optional module whitelist.  If
@@ -29,12 +33,3 @@ whitelist.  If no whitelist is specified, we default to an empty whitelist.
     sandbox.runInSandbox(httpFun, context); // => 'OK'
     sandbox.runInSandbox(httpFun, context, whitelist); // => Error: 'http' is not whitelisted
 ````
-
-## Running the Tests
-
-````Shell
-    nodeunit test
-````
-
-This requires nodeunit to be installed as a global package (`npm install
--g nodeunit`).
