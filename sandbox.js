@@ -1,5 +1,7 @@
 exports.runInSandbox = function (src, ctx, whitelist) {
   var vm = require('vm')
+  var script = new vm.Script(
+    '(function() {"use strict"; return (' + src + ')()}())')
   var sandbox
 
   if (ctx && ctx.require) {
@@ -34,6 +36,5 @@ exports.runInSandbox = function (src, ctx, whitelist) {
     sandbox = Object.freeze(vm.createContext(ctx || {}))
   }
 
-  return vm.createScript('(function() {"use strict"; return (' +
-                            src + ')()}())').runInContext(sandbox)
+  return script.runInContext(sandbox)
 }
