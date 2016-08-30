@@ -18,8 +18,8 @@
     "vm",
     "isolation"
   ],
-  "author": "Klaus Trainer <klaus_trainer@posteo.de>",
-  "license": "Apache 2 License",
+  "author": "Klaus Trainer <klaus_trainer@apache.org>",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/KlausTrainer/sandbox.js/issues"
   },
