@@ -17,12 +17,12 @@ whitelist.  If no whitelist is specified, we default to an empty whitelist.
 ## Usage
 
 ````javascript
-    var sandbox = require("./sandbox"),
-      whitelist = ["console"],
-      context = {require: require},
-      theAnswerFun = function() { return 42; },
-      consoleFun = function() { require("console").log("Hello World!"); },
-      httpFun = function() { return require("http").STATUS_CODES['200']; };
+    var sandbox = require('sandbox.js'),
+        whitelist = ['console'],
+        context = {require: require},
+        theAnswerFun = function() { return 42; },
+        consoleFun = function() { require('console').log('Hello World!'); },
+        httpFun = function() { return require('http').STATUS_CODES['200']; };
 
     sandbox.runInSandbox(theAnswerFun); // => 42
 
