@@ -17,21 +17,23 @@ whitelist.  If no whitelist is specified, we default to an empty whitelist.
 ## Usage
 
 ````javascript
-    var sandbox = require('sandbox.js'),
-        whitelist = ['console'],
-        context = {require: require},
-        theAnswerFun = function() { return 42; },
-        consoleFun = function() { require('console').log('Hello World!'); },
-        httpFun = function() { return require('http').STATUS_CODES['200']; };
+    const sandbox = require('sandbox.js'),
+          context = {require: require},
+          theAnswerFun = function() { return 42; },
+          consoleFun = function() { require('console').log('Hello World!'); },
+          httpFun = function() { return require('http').STATUS_CODES['200']; };
 
     sandbox.runInSandbox(theAnswerFun); // => 42
 
     sandbox.runInSandbox(consoleFun); // => ReferenceError: require is not defined
     sandbox.runInSandbox(consoleFun, context); // => Error: 'console' is not whitelisted
-    sandbox.runInSandbox(consoleFun, context, whitelist); // => Hello World!
+    sandbox.runInSandbox(consoleFun, context, ['http']); // => Error: 'console' is not whitelisted
+    sandbox.runInSandbox(consoleFun, context, ['console']); // => Hello World!
 
-    sandbox.runInSandbox(httpFun, context); // => 'OK'
-    sandbox.runInSandbox(httpFun, context, whitelist); // => Error: 'http' is not whitelisted
+    sandbox.runInSandbox(httpFun); // => ReferenceError: require is not defined
+    sandbox.runInSandbox(httpFun, context); // => Error: 'http' is not whitelisted
+    sandbox.runInSandbox(httpFun, context, ['console']); // => Error: 'http' is not whitelisted
+    sandbox.runInSandbox(httpFun, context, ['http']);  // => 'OK'
 ````
 
 ## LICENSE
