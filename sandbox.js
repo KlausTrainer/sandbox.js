@@ -1,25 +1,28 @@
+'use strict'
+
 exports.runInSandbox = function (src, ctx, whitelist) {
-  var vm = require('vm')
-  var script = new vm.Script(
+  const vm = require('vm')
+  const script = new vm.Script(
     '(function() {"use strict"; return (' + src + ')()}())')
-  var sandbox
 
   if (ctx && ctx.require) {
-    whitelist = whitelist || []
-    var insecureRequire = ctx.require
-    var module = require('module')
-    var oldModulePrototype = module.prototype
+    const insecureRequire = ctx.require
+    const module = require('module')
+    const oldModulePrototype = module.prototype
 
-    var secureRequire = function (moduleName) {
-      if (whitelist.indexOf(moduleName) === -1) {
+    const secureRequire = function (moduleName) {
+      if ((whitelist || []).indexOf(moduleName) === -1) {
         module.prototype = oldModulePrototype
         throw new Error("'" + moduleName + "' is not whitelisted")
       } else {
-        var requiredModule = insecureRequire(moduleName)
+        const requiredModule = insecureRequire(moduleName)
         module.prototype = oldModulePrototype
         return requiredModule
       }
     }
+
+    const newCtx = Object.freeze(
+      Object.assign({}, ctx, {require: secureRequire}))
 
     module.prototype = {
       require: secureRequire,
@@ -29,12 +32,8 @@ exports.runInSandbox = function (src, ctx, whitelist) {
 
     module._cache = {}
 
-    ctx.require = secureRequire
-    sandbox = Object.freeze(vm.createContext(ctx))
-    ctx.require = insecureRequire
-  } else {
-    sandbox = Object.freeze(vm.createContext(ctx || {}))
+    return script.runInContext(vm.createContext(newCtx))
   }
 
-  return script.runInContext(sandbox)
+  return script.runInContext(vm.createContext(Object.freeze(ctx || {})))
 }
